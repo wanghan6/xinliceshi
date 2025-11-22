@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>你的教育方式，正在伤害孩子吗？家长类型自测</title>
+    <style>
+        :root {
+            --primary-color: #E65100; /* 警示橙，制造焦虑感但也温暖 */
+            --secondary-color: #FFF3E0;
+            --text-color: #333;
+            --accent-color: #2E7D32; /* 治愈绿，用于建议部分 */
+            --bg-color: #FAFAFA;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* 封面页样式 */
+        .landing-card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+
+        .landing-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--text-color);
+            margin-bottom: 15px;
+        }
+
+        .highlight {
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        .pain-points {
+            text-align: left;
+            background: var(--secondary-color);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+
+        .pain-points li {
+            margin-bottom: 8px;
+        }
+
+        .btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            border-radius: 30px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+            transition: transform 0.1s;
+            box-shadow: 0 4px 10px rgba(230, 81, 0, 0.3);
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        /* 答题页样式 */
+        #quiz-container {
+            display: none;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #ddd;
+            border-radius: 3px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary-color);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .question-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+            animation: fadeIn 0.5s;
+        }
+
+        .question-text {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .option-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 12px;
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            text-align: left;
+            cursor: pointer;
+            font-size: 15px;
+            transition: all 0.2s;
+        }
+
+        .option-btn:hover, .option-btn:active {
+            background: var(--secondary-color);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        /* 结果页样式 */
+        #result-container {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .result-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .result-type {
+            font-size: 28px;
+            color: var(--primary-color);
+            font-weight: 900;
+            margin: 10px 0;
+        }
+
+        .result-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+        }
+
+        .section-title {
+            font-weight: bold;
+            border-left: 4px solid var(--primary-color);
+            padding-left: 10px;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .quote-box {
+            background: #f4f4f4;
+            padding: 10px;
+            border-radius: 4px;
+            font-style: italic;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .harm-analysis {
+            color: #D32F2F;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .advice-box {
+            background: #E8F5E9;
+            padding: 15px;
+            border-radius: 8px;
+            color: var(--accent-color);
+            margin-top: 15px;
+            font-weight: 500;
+        }
+
+        .cta-box {
+            background: linear-gradient(135deg, #333 0%, #000 100%);
+            color: #FFD700;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .cta-text {
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        .wechat-copy-btn {
+            background: #FFD700;
+            color: #000;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            color: #999;
+            margin-top: 30px;
+            padding-bottom: 20px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    
+    <div id="landing-page" class="landing-card">
+        <div class="landing-title">你的教育方式<br>正在<span class="highlight">伤害</span>孩子吗？</div>
+        <p style="font-size: 14px; color: #666;">家长类型深度诊断 · 萨提亚心理模型支持</p>
+        
+        <div class="pain-points">
+            <ul>
+                <li>❌ 你明明为了他好，他却总是关门、沉默、顶嘴？</li>
+                <li>❌ 辅导作业就像“渡劫”，亲子关系降至冰点？</li>
+                <li>❌ 感觉孩子越来越陌生，不仅不听话，还把你当仇人？</li>
+            </ul>
+        </div>
+        
+        <p style="font-size: 15px; margin-bottom: 25px;">
+            也许不是孩子叛逆，而是你的“爱”用错了方式。<br>
+            <br>
+            <strong>花5分钟，测测你是哪种类型的家长？</strong>
+        </p>
+        
+        <button class="btn" onclick="startQuiz()">开始深度诊断</button>
+    </div>
+
+    <div id="quiz-container">
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress"></div>
+        </div>
+        <div class="question-card">
+            <div class="question-text" id="question-text">题目加载中...</div>
+            <div id="options-container">
+                </div>
+        </div>
+        <div style="text-align: center; color: #999; font-size: 12px; margin-top: 20px;">
+            慧敏老师 · 亲子关系修复工作室
+        </div>
+    </div>
+
+    <div id="result-container">
+        <div class="result-header">
+            <p>诊断报告已生成</p>
+            <div class="result-type" id="result-title">类型加载中...</div>
+        </div>
+
+        <div class="result-card">
+            <div class="section-title">你的口头禅</div>
+            <div class="quote-box" id="result-quotes"></div>
+
+            <div class="section-title">深度分析：对孩子的伤害</div>
+            <div class="harm-analysis" id="result-harm"></div>
+
+            <div class="advice-box">
+                💡 <strong>慧敏老师建议：</strong><br>
+                <span id="result-advice"></span>
+            </div>
+        </div>
+
+        <div class="cta-box">
+            <div class="cta-text" id="cta-text"></div>
+            <div style="font-size: 12px; margin-bottom: 10px; opacity: 0.8;">点击下方复制微信号，去微信粘贴</div>
+            <button class="wechat-copy-btn" onclick="copyWechat()">复制慧敏老师微信号</button>
+            <div style="margin-top: 10px; font-size: 12px; color: #fff;">
+                添加后回复暗号：<span id="cta-code" style="color: #FFD700; font-weight: bold;"></span>
+            </div>
+        </div>
+
+        <div class="footer">
+            慧敏老师 | 资深家庭教育指导师<br>
+            Copyright © 2023-2025
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // 题目数据 (映射逻辑: A=1控制, B=2焦虑, C=3放任, D=4民主, E=5理想)
+    const questions = [
+        {
+            q: "1. 晚上10点了，孩子还在磨蹭玩手机不肯去洗澡睡觉，你的第一反应是？",
+            options: [
+                { text: "直接把路由器拔了或抢走手机：“再不睡手机没收一个月！”", type: 1 },
+                { text: "不停碎碎念：“几点了？明天起不来上学迟到怎么办？考不上高中怎么办？”", type: 2 },
+                { text: "叹口气，随他去吧，反正说了也不听，自己回房睡觉。", type: 3 },
+                { text: "和孩子商量：“我们约定好10点关机，如果现在不睡，明天你自己承担后果。”", type: 4 },
+                { text: "摸摸头：“我看你好像有点不想睡，是不是有心事或游戏到关键时刻了？”", type: 5 }
+            ]
+        },
+        {
+            q: "2. 孩子期中考试成绩下滑严重，拿着试卷回家，你会说？",
+            options: [
+                { text: "“怎么考成这个鬼样子？这周末哪也别想去，给我把错题抄100遍！”", type: 1 },
+                { text: "“这可怎么办啊，隔壁小明考了第一，你这样下去以后能干什么啊？”", type: 2 },
+                { text: "“哦，知道了，下次努力吧。”（没有眼神交流）", type: 3 },
+                { text: "“我们来分析一下，是题目太难还是复习没到位？制定个计划吧。”", type: 4 },
+                { text: "“我看你表情不太好，是不是自己也很难过？妈妈陪你一起看看怎么回事。”", type: 5 }
+            ]
+        },
+        {
+            q: "3. 孩子想买一双很贵的球鞋，远超你的预算，你会？",
+            options: [
+                { text: "“小小年纪就学会攀比？没门！想都别想。”", type: 1 },
+                { text: "“家里赚钱不容易啊，爸妈这么辛苦都是为了你，你怎么这么不懂事...”", type: 2 },
+                { text: "“行吧行吧，买买买，别来烦我就行。”", type: 3 },
+                { text: "“这双鞋很酷，但超出了预算，如果你愿意做家务赚钱，我们可以一人出一半。”", type: 4 },
+                { text: "“哇，真帅！我理解你想在同学面前有面子。但预算有限，我们一起存钱买好吗？”", type: 5 }
+            ]
+        },
+        {
+            q: "4. 孩子放学回家摔门，看起来很生气，你会？",
+            options: [
+                { text: "“发什么神经？在外面受气了回家撒野？有没有教养！”", type: 1 },
+                { text: "“怎么了？被欺负了？还是老师骂你了？快告诉妈妈！”", type: 2 },
+                { text: "假装没看见，避免引火烧身。", type: 3 },
+                { text: "等他出来吃饭时问：“你今天情绪看起来不稳定，需要聊聊吗？”", type: 4 },
+                { text: "送一杯热牛奶，贴便条：“看你心情不好，不打扰你，想说是随时找我。”", type: 5 }
+            ]
+        },
+        {
+            q: "5. 周末全家出去吃饭，孩子想吃披萨，你想吃中餐，你会？",
+            options: [
+                { text: "“吃什么披萨，垃圾食品！听我的，去吃那家粤菜。”", type: 1 },
+                { text: "“吃披萨会上火的，上火了就要去医院，还是喝粥吧。”", type: 2 },
+                { text: "“随便，你们定，我无所谓。”", type: 3 },
+                { text: "“要不投票决定？或者这周听你的，下周听我的。”", type: 4 },
+                { text: "“我知道你馋披萨很久了。今天满足你，晚上回家我再煮点青菜平衡一下。”", type: 5 }
+            ]
+        },
+        {
+            q: "6. 发现孩子把房门锁上了，并在里面写日记，你会？",
+            options: [
+                { text: "强行要求打开：“在这个家对我没有秘密，锁门就是心里有鬼！”", type: 1 },
+                { text: "在门口徘徊，反复问：“你在干嘛？没做什么坏事吧？”", type: 2 },
+                { text: "锁就锁吧，正好我也乐得清静。", type: 3 },
+                { text: "敲门询问：“为什么锁门？如果需要独处空间可以告诉我。”", type: 4 },
+                { text: "尊重他的界限，告诉他：“这是你的私人空间，妈妈尊重你。”", type: 5 }
+            ]
+        },
+        {
+            q: "7. 孩子交了一个看起来“不太爱学习”的朋友，你会？",
+            options: [
+                { text: "严厉禁止：“不许再跟他来往，近朱者赤近墨者黑！”", type: 1 },
+                { text: "忧心忡忡：“这孩子看起来不像好人，你会不会被带坏啊？”", type: 2 },
+                { text: "只要不惹事，交什么朋友是他的自由。", type: 3 },
+                { text: "和孩子探讨：“你欣赏他哪一点？交友要有自己的判断标准。”", type: 4 },
+                { text: "邀请那个朋友来家里玩，侧面观察并引导孩子建立正确的交友观。", type: 5 }
+            ]
+        },
+        {
+            q: "8. 孩子主动洗碗，结果不小心打碎了一个盘子，你会？",
+            options: [
+                { text: "大吼：“笨手笨脚的！以后别碰了，越帮越忙！”", type: 1 },
+                { text: "惊慌失措：“哎呀扎到手没有？我就说这很危险你别动嘛！”", type: 2 },
+                { text: "看一眼：“自己扫干净，别扎到我就行。”", type: 3 },
+                { text: "冷静地说：“没关系，打扫干净，下次注意拿盘子的手法。”", type: 4 },
+                { text: "先确认安全：“没受伤就好。谢谢你帮妈妈分担，碎碎平安。”", type: 5 }
+            ]
+        },
+        {
+            q: "9. 孩子说想学架子鼓，但你觉得这会影响学习且太吵，你会？",
+            options: [
+                { text: "“学什么架子鼓，不务正业！给我老实去补习英语。”", type: 1 },
+                { text: "“那东西多吵啊，邻居投诉怎么办？而且你三分钟热度...”", type: 2 },
+                { text: "“你有钱自己去报，我不管接送。”", type: 3 },
+                { text: "“如果你能保证不影响成绩，并且坚持一年，我们可以商量。”", type: 4 },
+                { text: "“很酷的爱好！我们一起制定个时间表，既不扰民又能让你享受音乐。”", type: 5 }
+            ]
+        },
+        {
+            q: "10. 假如孩子真的早恋了，被老师叫家长，回家后你会？",
+            options: [
+                { text: "暴怒，没收手机，切断一切联系，甚至动手。", type: 1 },
+                { text: "哭诉：“你才多大啊，这会毁了你一辈子的！”", type: 2 },
+                { text: "老师未免大惊小怪，现在孩子都早熟。", type: 3 },
+                { text: "坐下来谈：“什么是喜欢？现在的感情和未来的规划如何平衡？”", type: 4 },
+                { text: "“谢谢你愿意面对。美好的感情是动力，妈妈和你分享下我的初恋故事...”", type: 5 }
+            ]
+        }
+    ];
+
+    // 结果数据
+    const results = {
+        1: {
+            title: "控制型家长——以爱为名的“监狱长”",
+            quotes: "“我还没说完，你不许插嘴！”<br>“我是你妈，听我的没错！”",
+            harm: "在你的高压统治下，孩子的“自我”是破碎的。短期内他可能顺从或隐忍，但青春期极易爆发式“复仇”，或成年后形成讨好型人格，缺乏主见，容易在亲密关系中被PUA。",
+            advice: "把选择权还给孩子。下次想发号施令时，把句号改成问号：“关于这件事，你的想法是什么？”",
+            ctaText: "测出这个结果，说明亲子关系已亮红灯！不想让孩子彻底爆发，请立刻领取《萨提亚·家长情绪急救包》。",
+            code: "急救包"
+        },
+        2: {
+            title: "焦虑型家长——传递恐惧的“直升机”",
+            quotes: "“你现在不努力，以后只能去扫大街！”<br>“我就急得心脏病要犯了。”",
+            harm: "你把对未来的恐惧投射给了孩子。孩子内耗严重，觉得“成长”充满危险。长期容易导致考前焦虑、强迫行为，甚至因为不想面对压力而彻底“躺平”。",
+            advice: "先处理心情，再处理事情。孩子的未来不会因为一次失误毁掉，但会因为一个情绪不稳定的妈妈而毁掉。",
+            ctaText: "焦虑是孩子的毒药。你需要学会“情绪暂停”。免费领取《3分钟化解焦虑话术》。",
+            code: "急救包"
+        },
+        3: {
+            title: "放任型家长——缺乏边界的“隐形人”",
+            quotes: "“别来烦我，你自己看着办。”<br>“树大自然直。”",
+            harm: "你以为给了自由，其实给了“被忽视感”。孩子感受不到关注，可能会故意制造麻烦博眼球，或者内心深处觉得自己“不重要”，产生情感淡漠。",
+            advice: "爱是需要“在场”的。每天哪怕15分钟，放下手机，全心全意陪孩子做一件他喜欢的事。",
+            ctaText: "孩子缺的不是自由，是有效关注。领取《给孩子立规矩的黄金法则》视频课。",
+            code: "规矩"
+        },
+        4: {
+            title: "民主型家长——理性但冰冷的“谈判官”",
+            quotes: "“我们要讲道理，逻辑对吗？”<br>“按照约定，你要受罚。”",
+            harm: "家里太像法庭了，缺了点人情味。孩子觉得你像机器人，遇到情感挫折不敢告诉你，怕被“讲道理”。容易变成高智商、低情商的“精致利己主义者”。",
+            advice: "先通情，再达理。在讲道理之前，先抱抱孩子，告诉他：“我知道你很难过。”",
+            ctaText: "赢了道理，输了感情？学习如何走进孩子心里，领取《高情商父母共情沟通30句》。",
+            code: "共情"
+        },
+        5: {
+            title: "理想型家长——温暖而有力的“园丁”",
+            quotes: "“无论发生什么，爸妈永远支持你。”<br>“我相信你能处理好。”",
+            harm: "恭喜你！你是那10%的智慧父母。你既给了孩子无条件的爱，又设立了清晰边界。在你的滋养下，孩子拥有强大的心理韧性。",
+            advice: "请继续保持！你是孩子的幸运。如果你想帮助更多家长，欢迎加入我们的社群。",
+            ctaText: "你做得很好！欢迎加入【智慧父母进化营】，与其他优秀家长一起交流，获取更多进阶资源。",
+            code: "进化营"
+        }
+    };
+
+    // 逻辑变量
+    let currentQuestionIndex = 0;
+    let scores = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+    const wechatId = "Huimin_Teacher123"; // 请替换为你的真实微信号
+
+    // 开始测试
+    function startQuiz() {
+        document.getElementById('landing-page').style.display = 'none';
+        document.getElementById('quiz-container').style.display = 'block';
+        renderQuestion();
+    }
+
+    // 渲染题目
+    function renderQuestion() {
+        const qData = questions[currentQuestionIndex];
+        document.getElementById('question-text').textContent = qData.q;
+        document.getElementById('progress').style.width = ((currentQuestionIndex) / questions.length * 100) + '%';
+        
+        const optionsContainer = document.getElementById('options-container');
+        optionsContainer.innerHTML = '';
+        
+        qData.options.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.textContent = opt.text;
+            btn.onclick = () => handleAnswer(opt.type);
+            optionsContainer.appendChild(btn);
+        });
+    }
+
+    // 处理回答
+    function handleAnswer(type) {
+        scores[type]++;
+        currentQuestionIndex++;
+        
+        if (currentQuestionIndex < questions.length) {
+            renderQuestion();
+        } else {
+            showResult();
+        }
+    }
+
+    // 显示结果
+    function showResult() {
+        document.getElementById('quiz-container').style.display = 'none';
+        document.getElementById('result-container').style.display = 'block';
+        
+        // 计算最高分类型
+        let maxType = 1;
+        let maxScore = 0;
+        
+        // 优先逻辑：如果分数相同，优先显示问题更严重的类型 (1控制 > 2焦虑 > 3放任 > 4民主 > 5理想)
+        // 因为目的是转化痛点用户，所以如果用户既有控制又有民主，显示控制更能触动他
+        for (let type = 1; type <= 5; type++) {
+            if (scores[type] > maxScore) {
+                maxScore = scores[type];
+                maxType = type;
+            }
+        }
+
+        const resultData = results[maxType];
+        document.getElementById('result-title').textContent = resultData.title;
+        document.getElementById('result-quotes').innerHTML = resultData.quotes;
+        document.getElementById('result-harm').textContent = resultData.harm;
+        document.getElementById('result-advice').textContent = resultData.advice;
+        document.getElementById('cta-text').textContent = resultData.ctaText;
+        document.getElementById('cta-code').textContent = resultData.code;
+    }
+
+    // 复制微信号功能
+    function copyWechat() {
+        const input = document.createElement('input');
+        input.setAttribute('value', wechatId);
+        document.body.appendChild(input);
+        input.select();
+        document.execCommand('copy');
+        document.body.removeChild(input);
+        alert('慧敏老师微信号已复制！\n请前往微信-添加朋友-粘贴搜索');
+        // 可以在这里加一个跳转到微信的链接 scheme，但通常浏览器不一定支持
+    }
+</script>
+
+</body>
+</html>
